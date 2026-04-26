@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:18
+    container_name: postgres-db
+    restart: always
+    env_file:
+      - ${DB_SECRET}
+    ports:
+      - "5435:5432"
+    environment:
+      PGDATA: /JwtData
+    volumes:
+      - C:/docker-data/postgresData:/JwtData
+
+  redis:
+    image: redis:7
+    container_name: redis-cache
+    restart: always
+    ports:
+      - "6379:6379"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-ui
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mishravishal1234558@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5555:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  app:
+    build: .
+    container_name: jwt
+    restart: always
+    env_file:
+      - ${APPLICATION_SECRET}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  pgadmin-data:
