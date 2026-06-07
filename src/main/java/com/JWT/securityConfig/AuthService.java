@@ -22,7 +22,9 @@ import com.JWT.entityManager.UserDetailsEntity;
 import io.jsonwebtoken.security.InvalidKeyException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
+/*
+ * Service class for handling authentication and user registration
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -33,6 +35,9 @@ public class AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthUtil authUtil;
 
+	/*
+	 * Login method for authenticating users
+	 */
 	public LoginResponseDTO login(HttpServletRequest request, LoginRequestDTO loginRequestDTO)
 			throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, IOException {
 		Authentication authentication = authenticationManager.authenticate(
@@ -44,7 +49,8 @@ public class AuthService {
 		String token = authUtil.generateAccessToken(request, userDTO);
 		return new LoginResponseDTO(token, userDTO.getId());
 	}
-
+	/*
+	 */
 	public SignUpResponseDTO signUp(SignUpRequestDTO signUpRequestDTO) {
 		UserDetailsEntity userDetails = customUserDetailsRepo.findByUserName(signUpRequestDTO.getUserName())
 				.orElse(null);
